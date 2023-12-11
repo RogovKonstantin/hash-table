@@ -1,6 +1,8 @@
 import java.util.Iterator;
 import java.util.LinkedList;
 
+
+
 public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
 
     private static final int INITIAL_CAPACITY = 16;
@@ -18,12 +20,20 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
 
     }
 
-    public HashTable(int capacity) {
-        this.capacity = capacity;
-        this.slots = new LinkedList[capacity];
-        for (int i = 0; i < capacity; i++) {
-            slots[i] = new LinkedList<>();
+
+
+
+    public int findCollisions() {
+        int cCount = 0;
+
+        for (int i = 0; i < slots.length; i++) {
+            LinkedList<KeyValue<K, V>> bucket = slots[i];
+            if (bucket.size() > 1) {
+                cCount += bucket.size() - 1;
+            }
         }
+
+        return cCount;
     }
 
     public void add(K key, V value) {
@@ -74,6 +84,13 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
 
     public int capacity() {
         return capacity;
+    }
+    public HashTable(int capacity) {
+        this.capacity = capacity;
+        this.slots = new LinkedList[capacity];
+        for (int i = 0; i < capacity; i++) {
+            slots[i] = new LinkedList<>();
+        }
     }
 
     public boolean addOrReplace(K key, V value) {
@@ -190,30 +207,4 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
 
         return allEntries.iterator();
     }
-
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("HashTable{slots=[");
-        boolean firstNonEmptySlotFound = false;
-        for (LinkedList<KeyValue<K, V>> bucket : slots) {
-            if (!bucket.isEmpty() || firstNonEmptySlotFound) {
-                if (firstNonEmptySlotFound) {
-                    sb.append(", ");
-                }
-                sb.append(bucket);
-                firstNonEmptySlotFound = true;
-            }
-        }
-        sb.append("], count=").append(count);
-        sb.append(", capacity=").append(capacity).append("}");
-        return sb.toString();
-    }
-
-    /*@Override
-    public String toString() {
-        return "slots=" + Arrays.toString(slots) +
-                ", count=" + count +
-                ", capacity=" + capacity;
-    }*/
 }
