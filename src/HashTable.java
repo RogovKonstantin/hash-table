@@ -2,8 +2,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 
-
-public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
+public class HashTable<K, V> implements Iterable<KeyValue<K, V>> {
 
     private static final int INITIAL_CAPACITY = 16;
     private static final double LOAD_FACTOR = 0.80d;
@@ -20,7 +19,9 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
 
     }
 
-
+    public double getCoefficient() {
+        return (double) (this.size() + 1) / capacity;
+    }
 
 
     public int findCollisions() {
@@ -56,9 +57,10 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
     }
 
     private void growIfNeeded() {
-        if ((double) (this.size() + 1) / this.capacity() > LOAD_FACTOR){
+        if ((double) (this.size() + 1) / this.capacity() > LOAD_FACTOR) {
             this.grow();
-        }    }
+        }
+    }
 
     private void grow() {
         int newCapacity = this.capacity * 2;
@@ -85,6 +87,7 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
     public int capacity() {
         return capacity;
     }
+
     public HashTable(int capacity) {
         this.capacity = capacity;
         this.slots = new LinkedList[capacity];
@@ -123,7 +126,7 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
         return null;
     }
 
-    public KeyValue<K, V>find(K key) {
+    public KeyValue<K, V> find(K key) {
         int slot = findSlotNumber(key);
         LinkedList<KeyValue<K, V>> bucket = slots[slot];
 
@@ -173,7 +176,7 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
         count = 0;
     }
 
-    public Iterable<K>keys() {
+    public Iterable<K> keys() {
         LinkedList<K> keys = new LinkedList<>();
 
         for (LinkedList<KeyValue<K, V>> bucket : slots) {
@@ -185,7 +188,7 @@ public class HashTable<K, V> implements Iterable<KeyValue<K, V>>{
         return keys;
     }
 
-    public Iterable<V>values() {
+    public Iterable<V> values() {
         LinkedList<V> values = new LinkedList<>();
 
         for (LinkedList<KeyValue<K, V>> bucket : slots) {
